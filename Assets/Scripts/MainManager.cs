@@ -9,9 +9,11 @@ public class MainManager : MonoBehaviour
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
-
+    public Text RecordName;
     public Text ScoreText;
     public GameObject GameOverText;
+    public GameObject NewRecordText;
+    public Button quitButton;
     
     private bool m_Started = false;
     private int m_Points;
@@ -36,6 +38,11 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+        SetText(GameManager.instance.GetBestPerson());
+    }
+
+    private void SetText (Person person) {
+        RecordName.text = "Best Score : " + person.Name + " : " + person.points;
     }
 
     private void Update()
@@ -72,5 +79,14 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+        quitButton.gameObject.SetActive(true);
+        if (m_Points > GameManager.instance.GetBestPerson().points) {
+            NewRecordText.gameObject.SetActive(true);
+        }
+        GameManager.instance.UpdatePoints(m_Points);
+    }
+
+    public void QuitMainMenu () {
+        SceneManager.LoadScene("Main Menu");
     }
 }
